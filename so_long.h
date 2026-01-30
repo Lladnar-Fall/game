@@ -3,10 +3,20 @@
 
 # include "../minilibx-linux/mlx.h"
 
-struct s_game
+typedef struct s_game
 {
-    int
+    char **map;
+    int map_width;
+    int map_height;
+    int player_y;
+    int player_x;
+    int remaining;
+    int moves;
+    void *mlx;
+    void *win;
 
 } t_game;
+
+
 
 #endif
