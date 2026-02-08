@@ -1,6 +1,6 @@
 #include "so_long.h"
 
-int check_vald_path(t_game *game)
+char **copy_map(t_game *game)
 {
     char **copy_map;
     int row;
@@ -22,9 +22,75 @@ int check_vald_path(t_game *game)
         }
         row++;
     }
-    //[2] Find player position
-    //[3] Flood fill from player position
-    //[4] Scan the map for unreachable C and E
-    //[5] Free the map
-    //[6] Return the result
+    copy_map[row] = NULL;
+    return (copy_map);
+}
+
+void flood_fill(t_game *game, char **map, int y, int x)
+{
+    if (y < 0 || x < 0 || y >= game->map_height || x >= game->map_width)
+        return;
+    if (map[y][x] == '1' || map[y][x] == 'V')
+        return;
+    map[y][x] = 'V';
+    flood_fill(game, map, y - 1, x);
+    flood_fill(game, map, y + 1, x);
+    flood_fill(game, map, y, x - 1);
+    flood_fill(game, map, y, x + 1);
+}
+
+int check_vald_path(t_game *game)
+{
+    char **dup_map;
+    int player_x;
+    int player_y;
+    int x;
+    int y;
+
+    dup_map = copy_map(game);
+    if (!dup_map)
+        return (0);
+
+    player_x = -1;
+    player_y = -1;
+    y = 0;
+    while (y < game->map_height)
+    {
+        x = 0;
+        while (x < game->map_width)
+        {
+            if (dup_map[y][x] == 'P')
+            {
+                player_y = y;
+                player_x = x;
+            }
+            x++;
+        }
+        y++;
+    }
+    if (player_x == -1 || player_y == -1)
+    {
+        free_map(dup_map);
+        return (0);
+    }
+
+    flood_fill(game, dup_map, player_y, player_x);
+
+    y = 0;
+    while (y < game->map_height)
+    {
+        x = 0;
+        while (x < game->map_width)
+        {
+            if (dup_map[y][x] == 'E' || dup_map[y][x] == 'C')
+            {
+                free_map(dup_map);
+                return (0);
+            }
+            x++;
+        }
+        y++;
+    }
+    free_map(dup_map);
+    return (1);
 }
