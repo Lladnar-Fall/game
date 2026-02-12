@@ -6,9 +6,13 @@ void render_tile(t_game *game, int y, int x)
         game->mlx,
         game->win,
         game->img_floor,
-        y * TILE_SIZE,
-        x * TILE_SIZE
+        x * TILE_SIZE,
+        y * TILE_SIZE
     );
+
+    if (game->map[y][x] == '0' || game->map[y][x] == 'P' || game->map[y][x] == 'C' || game->map[y][x] == 'E')
+    mlx_put_image_to_window(game->mlx, game->win, game->img_floor, x * TILE_SIZE, y * TILE_SIZE);
+
     if (game->map[y][x] == '1')
         mlx_put_image_to_window(game->mlx, game->win,
         game->img_wall, x * TILE_SIZE, y * TILE_SIZE);
@@ -40,4 +44,3 @@ void    render_map(t_game *game)
     //[3] Draw floor
     //[4] Draw wall/player/collectible/exit
 }
-Can I put render block 4 and 3 in another function because this function will be over 25 lines

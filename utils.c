@@ -23,8 +23,8 @@ int close_game(t_game *game)
         mlx_destroy_image(game->mlx, game->img_player);
     if (game->img_exit)
         mlx_destroy_image(game->mlx, game->img_exit);
-    if (game->img_collect)
-        mlx_destroy_image(game->mlx, game->img_collect);
+    if (game->img_collectible)
+        mlx_destroy_image(game->mlx, game->img_collectible);
 
     if (game->win)
         mlx_destroy_window(game->mlx, game->win);

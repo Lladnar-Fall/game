@@ -1,4 +1,3 @@
-#include "minilibx-linux/mlx.h"
 #include "so_long.h"
 
 // int main()
@@ -49,7 +48,8 @@ void    load_images(t_game *game)
     game->img_floor = mlx_xpm_file_to_image(game->mlx, "textures/floor.xpm", &w, &h);
     game->img_player = mlx_xpm_file_to_image(game->mlx, "textures/player.xpm", &w, &h);
     game->img_exit = mlx_xpm_file_to_image(game->mlx, "textures/exit.xpm", &w, &h);
-    game->img_collect = mlx_xpm_file_to_image(game->mlx, "textures/collect.xpm", &w, &h);
+    game->img_collectible = mlx_xpm_file_to_image(game->mlx, "textures/collectible.xpm", &w, &h);
+    
 }
 
 void init_game(t_game *game)
@@ -63,20 +63,29 @@ void init_game(t_game *game)
     load_images(game);
 }
 
-int main(int argc, char **argv)
+int main(int ac, char **av)
 {
     t_game game;
 
     ft_memset(&game, 0, sizeof(t_game));
 
-    read_map(&game, argv[1]);
+    if (ac != 2)
+        error_exit(&game, "Usage: ./so_long map.ber");
+
+    read_map(&game, av[1]);
+    int i = 0;
+    while (game.map[i])
+    {
+        ft_printf("%s\n", game.map[i]);
+        i++;
+    }
     check_map(&game);
     check_valid_path(&game);
 
     init_game(&game);        // mlx + window + images
     render_map(&game);
 
-    mlx_key_hook(game.win, handle_key, &game);
+    mlx_key_hook(game.win, handle_keypress, &game);
     mlx_hook(game.win, 17, 0, close_game, &game);
 
     mlx_loop(game.mlx);

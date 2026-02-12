@@ -39,7 +39,7 @@ void flood_fill(t_game *game, char **map, int y, int x)
     flood_fill(game, map, y, x + 1);
 }
 
-int check_vald_path(t_game *game)
+int check_valid_path(t_game *game)
 {
     char **dup_map;
     int player_x;
@@ -61,6 +61,8 @@ int check_vald_path(t_game *game)
         {
             if (dup_map[y][x] == 'P')
             {
+                game->player_y = y;
+                game->player_x = x;
                 player_y = y;
                 player_x = x;
             }

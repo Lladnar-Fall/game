@@ -6,7 +6,7 @@ int count_lines(char *file)
     int fd;
     int count;
 
-    fd = read(file, O_RDONLY);
+    fd = open(file, O_RDONLY);
     if (fd < 0)
         return (-1);
     count = 0;
@@ -23,13 +23,15 @@ int count_lines(char *file)
 
 void fill_map(t_game *game, int fd)
 {
-    int i;
-    char *line;
+    int     i;
+    char    *line;
 
     line = get_next_line(fd);
     i = 0;
     while (line)
     {
+        if (line[ft_strlen(line) - 1] == '\n')
+            line[ft_strlen(line) - 1] = '\0';
         game->map[i] = line;
         i++;
         line = get_next_line(fd);
@@ -43,18 +45,18 @@ void    read_map(t_game *game, char *filename)
 
     game->map_height = count_lines(filename);
     if (game->map_height <= 0)
-        error_exit("Invalid map");
+        error_exit(game, "Invalid map");
 
-    game->map = malloc(sizeof(char *) * (map_height + 1));
+    game->map = malloc(sizeof(char *) * (game->map_height + 1));
     if (!game->map)
-        error_exit("Malloc failed");
+        error_exit(game, "Malloc failed");
 
     fd = open(filename, O_RDONLY);
     if (fd < 0)
-        error_exit("Error opening map");
+        error_exit(game, "Error opening map");
 
     fill_map(game, fd);
 
     close(fd);
-    game->map_width = ft_strlen(game->map[0]) - 1;
+    game->map_width = ft_strlen(game->map[0]);
 }
