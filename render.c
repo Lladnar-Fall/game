@@ -2,26 +2,27 @@
 
 void render_tile(t_game *game, int y, int x)
 {
-    mlx_put_image_to_window(
-        game->mlx,
-        game->win,
-        game->img_floor,
-        x * TILE_SIZE,
-        y * TILE_SIZE
-    );
+    // 1. ALWAYS draw the floor first for P, C, E, and 0
+    // This fills the 'background' of the tile so the black disappears
+    if (game->map[y][x] != '1')
+    {
+        mlx_put_image_to_window(game->mlx, game->win, 
+            game->img_floor, x * TILE_SIZE, y * TILE_SIZE);
+    }
 
-    if (game->map[y][x] == '0' || game->map[y][x] == 'P' || game->map[y][x] == 'C' || game->map[y][x] == 'E')
-    mlx_put_image_to_window(game->mlx, game->win, game->img_floor, x * TILE_SIZE, y * TILE_SIZE);
-
+    // 2. NOW draw the specific object on top of that floor
     if (game->map[y][x] == '1')
-        mlx_put_image_to_window(game->mlx, game->win,
-        game->img_wall, x * TILE_SIZE, y * TILE_SIZE);
+        mlx_put_image_to_window(game->mlx, game->win, 
+            game->img_wall, x * TILE_SIZE, y * TILE_SIZE);
     else if (game->map[y][x] == 'P')
-        mlx_put_image_to_window(game->mlx, game->win,
-        game->img_player, x * TILE_SIZE, y * TILE_SIZE);
+        mlx_put_image_to_window(game->mlx, game->win, 
+            game->img_player, x * TILE_SIZE, y * TILE_SIZE);
     else if (game->map[y][x] == 'E')
-        mlx_put_image_to_window(game->mlx, game->win,
-        game->img_exit, x * TILE_SIZE, y * TILE_SIZE);
+        mlx_put_image_to_window(game->mlx, game->win, 
+            game->img_exit, x * TILE_SIZE, y * TILE_SIZE);
+    else if (game->map[y][x] == 'C')
+        mlx_put_image_to_window(game->mlx, game->win, 
+            game->img_collectible, x * TILE_SIZE, y * TILE_SIZE);
 }
 
 void    render_map(t_game *game)
